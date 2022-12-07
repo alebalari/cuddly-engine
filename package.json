@@ -9,7 +9,8 @@
   "scripts": {
     "build": "rimraf ./dist && tsc",
     "start:dev": "npx nodemon",
-    "start:prod": "npm run build && node dist/index.js"
+    "start:prod": "npm run build && node dist/index.js",
+    "postinstall": "npm run build"
   },
   "devDependencies": {
     "@types/node": "^18.11.11",
