@@ -1,5 +1,5 @@
-# Barebones Node.JS Stack
-A barebones stack that can be extended as a basis for backend frameworks. 
+# cuddly-engine
+nodejs-barebones-stack combined with express for a basic api backend. 
  
 ## What's in the stack
 - Modern javascript runtime with [Node.js](https://nodejs.org/en/)
