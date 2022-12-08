@@ -1,20 +1,21 @@
 import express from 'express';
 import Loaders from './loaders';
 import config from './config';
+import Logger from './loaders/logger';
 
 async function serverInit() {
-	console.log('Server Initialization 👋');
+	Logger.info('Server Initialization 👋');
 	const app = express();
 	await Loaders({ loadersInit: app });
 	const port = config.port;
 	app
 		.listen(port, () => {
-			console.log(`Server Listening on port: ${port} 🤙`);
+			Logger.info(`Server Listening on port: ${port} 🤙`);
 		})
 		.on('error', (err) => {
-			console.error(err);
+			Logger.error(err);
 			process.exit(1);
 		});
 }
 
-serverInit().catch((error) => console.error(error));
+serverInit().catch((error) => Logger.error(error));
