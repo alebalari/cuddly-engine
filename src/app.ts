@@ -1,7 +1,7 @@
 import express from 'express';
 import Loaders from './loaders';
 import config from './config';
-import Logger from './loaders/logger';
+import Logger from './middleware/logger';
 
 async function serverInit() {
 	Logger.info('Server Initialization 👋');

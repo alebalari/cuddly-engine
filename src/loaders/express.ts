@@ -1,11 +1,10 @@
 import cors from 'cors';
-import express from 'express';
+import express, { Router } from 'express';
 import helmet from 'helmet';
-import morganMiddleware from '../config/morganMiddleware';
+import morganMiddleware from '../middleware/morganMiddleware';
 import compression from 'compression';
-import Logger from './logger';
 
-function expressLoader({ app }: { app: express.Application }) {
+export default ({ app }: { app: express.Application }) => {
 	app.use((req, res, next) => {
 		// helpful headers:
 		res.set('Strict-Transport-Security', `max-age=${60 * 60 * 24 * 365 * 100}`);
@@ -27,6 +26,5 @@ function expressLoader({ app }: { app: express.Application }) {
 	app.use(compression());
 	app.disable('x-powered-by');
 	app.use(morganMiddleware);
-}
-
-export default expressLoader;
+	app.use('/api', Router());
+};
