@@ -1,12 +1,13 @@
 import cors from 'cors';
-import express, { Router } from 'express';
+import express, { Application } from 'express';
 import helmet from 'helmet';
-import morganMiddleware from '../middleware/morganMiddleware';
+import morganMiddleware from '../utils/morgan.utils';
 import compression from 'compression';
 
-export default ({ app }: { app: express.Application }) => {
+function initializeExpress(app: Application): void {
+	// Applies to all requests
 	app.use((req, res, next) => {
-		// helpful headers:
+		// Helpful HTTP header:
 		res.set('Strict-Transport-Security', `max-age=${60 * 60 * 24 * 365 * 100}`);
 
 		// /clean-urls/ -> /clean-urls
@@ -18,6 +19,8 @@ export default ({ app }: { app: express.Application }) => {
 		}
 		next();
 	});
+
+	// Middleware
 	app.enable('trust proxy');
 	app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 	app.use(cors());
@@ -26,5 +29,10 @@ export default ({ app }: { app: express.Application }) => {
 	app.use(compression());
 	app.disable('x-powered-by');
 	app.use(morganMiddleware);
-	app.use('/api', Router());
-};
+
+	// Routes
+
+	// Error Handling
+}
+
+export default initializeExpress;

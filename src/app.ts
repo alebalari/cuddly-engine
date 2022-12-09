@@ -1,16 +1,18 @@
 import express from 'express';
-import Loaders from './loaders';
 import config from './config';
-import Logger from './middleware/logger';
+import Logger from './utils/logger.utils';
+import Loaders from './loaders';
 
-async function serverInit() {
+async function initializeServer() {
 	Logger.info('Server Initialization 👋');
 	const app = express();
-	await Loaders({ loadersInit: app });
+	await Loaders(app).catch((err: Error) => {
+		Logger.error(`👎 Something is up with initialization: ${err.message}`);
+	});
 	const port = config.port;
 	app
 		.listen(port, () => {
-			Logger.info(`Server Listening on port: ${port} 🤙`);
+			Logger.info(`😁 🎉 Server online and listening on PORT: ${port} 😁🎉`);
 		})
 		.on('error', (err) => {
 			Logger.error(err);
@@ -18,4 +20,4 @@ async function serverInit() {
 		});
 }
 
-serverInit().catch((error) => Logger.error(error));
+initializeServer().catch((err) => Logger.error(err));

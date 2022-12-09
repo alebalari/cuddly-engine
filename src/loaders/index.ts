@@ -1,11 +1,13 @@
 import { Application } from 'express';
-import expressLoader from './express';
-import mongooseLoader from './mongoose';
-import Logger from '../middleware/logger';
+import initializeExpress from './express';
+import initiliazeMongoose from './mongoose';
+import Logger from '../utils/logger.utils';
 
-export default async ({ loadersInit }: { loadersInit: Application }) => {
-	await mongooseLoader();
-	Logger.info('MongoDB Loaded and connected! ✌');
-	await expressLoader({ app: loadersInit });
+async function Loaders(expressInit: Application): Promise<void> {
+	await initiliazeMongoose();
+	Logger.info('MongoDB Loaded ✌');
+	await initializeExpress(expressInit);
 	Logger.info('Express loaded ✌');
-};
+}
+
+export default Loaders;

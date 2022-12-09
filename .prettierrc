@@ -12,5 +12,5 @@
     "jsxSingleQuote": true,
     "useTabs": true,
     "embeddedLanguageFormatting": "auto",
-    "endOfLine": "lf"
+    "endOfLine": "auto"
   }
