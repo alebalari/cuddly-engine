@@ -3,8 +3,10 @@ import express, { Application } from 'express';
 import helmet from 'helmet';
 import morganMiddleware from '../utils/morgan.utils';
 import compression from 'compression';
+import Logger from '../utils/logger.utils';
 
-function initializeExpress(app: Application): void {
+async function initializeExpress(app: Application): Promise<Application> {
+	Logger.info('✌ Express server initialized');
 	// Applies to all requests
 	app.use((req, res, next) => {
 		// Helpful HTTP header:
@@ -33,6 +35,8 @@ function initializeExpress(app: Application): void {
 	// Routes
 
 	// Error Handling
+
+	return app;
 }
 
 export default initializeExpress;

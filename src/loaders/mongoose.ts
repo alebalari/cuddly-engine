@@ -1,21 +1,22 @@
 import mongoose from 'mongoose';
-import config from '../config';
+import appConfig from '../config';
 import Logger from '../utils/logger.utils';
 
 async function initiliazeMongoose() {
 	// MondoDB connection string
-	const uri = config.dbURL;
+	const uri = appConfig.dbURL;
 	// MongoDB connection options
-	const options = config.mongoOptions;
+	// const options = appConfig.mongoOptions;
+	// remember to add options argument to mongoose.connect function
 	// Connection to MongoDB using Mongoose
-	await mongoose.connect(uri, options).then(
+	await mongoose.connect(uri).then(
 		() => {
 			// callback executed when promise resolved
-			Logger.info('✌ Mongoose connection succeeded');
+			Logger.info('✌ Mongoose connection initialized');
 		},
 		(err: Error) => {
 			// callback executed when promise rejected
-			Logger.error(`👎 Mongoose connection failed - ${err.message}`);
+			Logger.error(`👎 Mongoose initialization failed - ${err.message}`);
 		}
 	);
 }
