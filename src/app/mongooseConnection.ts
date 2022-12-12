@@ -3,19 +3,22 @@ import configuration from '../utils/configuration.utils';
 import Logger from '../utils/logger.utils';
 import handleMongooseEvent from '../utils/mongooseEvent.utils';
 
-// MongoDB connection URI
-const uri = configuration.mongoDbURL;
-// Connection options
-const options = configuration.mongoOptions;
-
-export default async function initializeMongooseConnection(): Promise<void> {
+export default async function mongooseConnection(): Promise<void> {
+	// Connection URI
+	const uri = configuration.mongoDbURL;
+	// Connection options
+	const options = configuration.mongoOptions;
+	// strictQuery is equal to strict by default as of Mongoose 6.0.10
+	// Gets rid of deprecation warning from Mongoose about 'strictQuery' being switched back to default in Mongoose 7
+	mongoose.set('strictQuery', true);
 	// Connects to MongoDB database using the Mongoose Library
 	await mongoose.connect(uri, options);
-	// Declare the Mongoose connection to use for handling connection events
+	// Declare the Mongoose connection to use
 	const mongooseConnection: Connection = mongoose.connection;
+	// These events are emitted after initial connection, you still need to handle errors for the initial connection itself at app/index.ts
 	// Emitted when Mongoose starts making its initial connection to the MongoDB server
 	handleMongooseEvent(mongooseConnection, 'connecting', (): void => {
-		Logger.info(' 👋 Mongoose has started its initial connection to the MongoDB server 👋 ');
+		Logger.info(' 🟢  Mongoose has started its initial connection to the MongoDB server 🟢 ');
 	});
 	// Emitted when Mongoose successfully makes its initial connection to the MongoDB server, or when Mongoose reconnects after losing connectivity. May be emitted multiple times if Mongoose loses connectivity.
 	handleMongooseEvent(mongooseConnection, 'connected', (): void => {
@@ -31,11 +34,11 @@ export default async function initializeMongooseConnection(): Promise<void> {
 	});
 	// Emitted when Mongoose lost connection to the MongoDB server. This event may be due to your code explicitly closing the connection, the database server crashing, or network connectivity issues.
 	handleMongooseEvent(mongooseConnection, 'disconnected', (): void => {
-		Logger.info(' 🛑   Mongoose has lost its connection to the MongoDB server 🛑  ');
+		Logger.info(' 🛑  Mongoose has lost its connection to the MongoDB server 🛑  ');
 	});
 	// Emitted after Connection#close() successfully closes the connection. If you call conn.close(), you'll get both a 'disconnected' event and a 'close' event.
 	handleMongooseEvent(mongooseConnection, 'close', (): void => {
-		Logger.info(' 🛑   Mongoose connection was closed 🛑  ');
+		Logger.info(' 🛑  Mongoose connection was closed 🛑  ');
 	});
 	// Emitted if Mongoose lost connectivity to MongoDB and successfully reconnected. Mongoose attempts to automatically reconnect when it loses connection to the database.
 	handleMongooseEvent(mongooseConnection, 'reconnected', (): void => {
@@ -43,7 +46,7 @@ export default async function initializeMongooseConnection(): Promise<void> {
 	});
 	// Emitted if an error occurs on a connection, like a parseError due to malformed data or a payload larger than 16MB.
 	handleMongooseEvent(mongooseConnection, 'error', (err: Error): void => {
-		Logger.info(' ⚠️   Something went wrong with Mongoose: ', err);
+		Logger.info(' ⚠️  Something went wrong with Mongoose: ', err);
 	});
 
 	// Close the connection when the application is terminated
@@ -62,7 +65,8 @@ export default async function initializeMongooseConnection(): Promise<void> {
 	process.on('SIGINT', () => {
 		closeMongooseConnection()
 			.then(() => {
-				Logger.info(' 🛑  Mongoose process has exited through app termination'); // Successfull process termination
+				Logger.info(' 🛑  Mongoose process has exited through app termination  🛑'); // Successfull process termination
+				Logger.info(' 🛑  Application has been terminated');
 				process.exit(0);
 			})
 			.catch((err) => {

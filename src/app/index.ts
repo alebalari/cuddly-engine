@@ -1,11 +1,11 @@
 import express, { Application } from 'express';
 import Controller from '../utils/interfaces/controller.interface';
 import Logger from '../utils/logger.utils';
-import initializeMongooseConnection from './initializeMongooseConnection';
-import initializeExpresswares from './initializeExpresswares';
-import initializeControllers from './initializeControllers';
-import initializeHttpLogger from './initializeHTTPLogger';
-import initializeErrorHandling from './initializeErrorHandling';
+import mongooseConnection from './mongooseConnection';
+import expresswares from './expresswares';
+import _controllers from './_controllers';
+import httpLogger from './httpLogger';
+import errorHandling from './errorHandling';
 
 export default class App {
 	app: Application;
@@ -15,15 +15,15 @@ export default class App {
 		this.app = express();
 		this.port = port;
 
-		initializeMongooseConnection()
+		mongooseConnection() // Initialize Mongoose connection to MongoDB server
 			.then(() => {
-				Logger.info(' ✅   Mongoose connection successfully initialized'); // Mongoose connection successfull
+				Logger.info(' ✅  Mongoose-MongoDB connection established'); // Mongoose connection successfull
 			})
 			.catch((err: Error) => {
 				Logger.error('❌  Mongoose connnection failed to initialize:', err); // Initial mongoose connection error handling
 				process.exit(1); // If the database connection fails, we can crash our app
 			});
-		initializeExpresswares(this.app)
+		expresswares(this.app)
 			.then(() => {
 				Logger.info(' ✅  Expresswares initialized'); // Expresswares loaded successfully
 			})
@@ -31,7 +31,7 @@ export default class App {
 				Logger.error('❌  Expresswares failed to initialize:', err); // Error in code with default express middlewares
 				process.exit(1); // Will crash app upon failure
 			});
-		initializeControllers(controllers, this.app)
+		_controllers(controllers, this.app)
 			.then(() => {
 				Logger.info(' ✅  Controllers initialized');
 			})
@@ -39,7 +39,7 @@ export default class App {
 				Logger.error('❌  Controllers failed to initialize:', err);
 				process.exit(1); // Will crash app upon failure
 			});
-		initializeHttpLogger(this.app)
+		httpLogger(this.app)
 			.then(() => {
 				Logger.info(' ✅  HTTP Logger initialized');
 			})
@@ -47,7 +47,7 @@ export default class App {
 				Logger.error('❌  HTTP Logger failed to initialize:', err);
 				process.exit(1); // Will crash app upon failure
 			});
-		initializeErrorHandling(this.app)
+		errorHandling(this.app)
 			.then(() => {
 				Logger.info(' ✅  Error Handling initialized');
 			})
@@ -58,8 +58,6 @@ export default class App {
 	}
 
 	public async listen(): Promise<void> {
-		this.app.listen(this.port, () => {
-			Logger.info(` 👂  App is listening on port: ${this.port}`);
-		});
+		this.app.listen(this.port);
 	}
 }

@@ -6,7 +6,7 @@ dotenv.config();
 
 if (dotenv.config().error != null) {
 	Logger.error('⚠️  Unable to locate your .env file ⚠️'); // error with .env file
-	process.exit(1); // nodejs will stop immediately
+	process.exit(1); // force app crash
 }
 
 const configuration: Configuration = {
@@ -18,6 +18,11 @@ const configuration: Configuration = {
 	// utils/interfaces/configuration.interface.ts contains available options and their descriptions
 	mongoOptions: {
 		family: 4,
+		autoIndex: false,
+		socketTimeoutMS: 4500,
+		serverSelectionTimeoutMS: 5000,
+		maxPoolSize: 10,
+		minPoolSize: 5,
 	},
 };
 

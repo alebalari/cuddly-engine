@@ -3,7 +3,7 @@ import cors from 'cors';
 import express, { Application } from 'express';
 import helmet from 'helmet';
 
-export default async function initializeExpresswares(app: Application) {
+export default async function expresswares(app: Application) {
 	// Applies to all express requests
 	app.use((req, res, next) => {
 		// Helpful HTTP header
