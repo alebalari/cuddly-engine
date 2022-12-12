@@ -2,9 +2,8 @@ import compression from 'compression';
 import cors from 'cors';
 import express, { Application } from 'express';
 import helmet from 'helmet';
-import morganMiddleware from './morgan.utils';
 
-export default function initializeMiddlewares(app: Application) {
+export default async function initializeExpresswares(app: Application) {
 	// Applies to all express requests
 	app.use((req, res, next) => {
 		// Helpful HTTP header
@@ -32,6 +31,4 @@ export default function initializeMiddlewares(app: Application) {
 	app.use(compression());
 	// Reduce server fingerprinting
 	app.disable('x-powered-by');
-	// Logs HTTP requests
-	app.use(morganMiddleware);
 }

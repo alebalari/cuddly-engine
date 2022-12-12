@@ -9,11 +9,11 @@
     "typescript"
   ],
   "license": "MIT",
-  "main": "app.ts",
+  "main": "index.ts",
   "scripts": {
     "build": "rimraf ./dist && tsc",
     "start:dev": "npx nodemon",
-    "start:prod": "npm run build && ts-node dist/app.ts"
+    "start:prod": "npm run build && ts-node dist/index.ts"
   },
   "dependencies": {
     "compression": "^1.7.4",
