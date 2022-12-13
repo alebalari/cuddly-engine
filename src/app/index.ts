@@ -1,63 +1,55 @@
-import express, { Application } from 'express';
-import Controller from '../utils/interfaces/controller.interface';
+import express, { Application, Router } from 'express';
 import Logger from '../utils/logger.utils';
-import mongooseConnection from './mongooseConnection';
-import expresswares from './expresswares';
-import _controllers from './_controllers';
-import httpLogger from './httpLogger';
-import errorHandling from './errorHandling';
+import expresswares from './initializeExpresswares';
+import errorHandling from './initializeErrorHandling';
+import Route from '../utils/interfaces/Route.interface';
+import { MongoOptions } from '../utils/interfaces/mongoOptions.interfaces';
+import databaseConnection from './initializeDatabase';
 
 export default class App {
-	app: Application;
+	express: Application;
 	port: number;
 
-	constructor(controllers: Controller[], port: number) {
-		this.app = express();
+	constructor(routes: Route[], port: number, mongoUri: string, mongoOptions: MongoOptions) {
+		this.express = express();
 		this.port = port;
 
-		mongooseConnection() // Initialize Mongoose connection to MongoDB server
+		this.initializeExpresswares();
+		this.initializeRoutes(routes);
+		this.initializeErrorHandling();
+		this.initializeDatabase(mongoUri, mongoOptions);
+	}
+
+	private initializeExpresswares(): void {
+		expresswares(this.express);
+		Logger.info(' ✅  Express middleware initialized...');
+	}
+
+	private initializeRoutes(routes: Route[]): void {
+		routes.forEach((route: Route) => {
+			this.express.use('/api', Router());
+		});
+		Logger.info(' ✅  Routes initialized...');
+	}
+
+	private initializeErrorHandling(): void {
+		errorHandling(this.express);
+		Logger.info(' ✅  Error middleware initialized...');
+	}
+
+	private initializeDatabase(mongoUri: string, mongoOptions: MongoOptions): void {
+		Logger.info(' ✅  Database connection initialized...');
+		databaseConnection(mongoUri, mongoOptions)
 			.then(() => {
-				Logger.info(' ✅  Mongoose-MongoDB connection established'); // Mongoose connection successfull
+				Logger.info(' 🙌  Connection with MongoDB server established');
 			})
 			.catch((err: Error) => {
-				Logger.error('❌  Mongoose connnection failed to initialize:', err); // Initial mongoose connection error handling
-				process.exit(1); // If the database connection fails, we can crash our app
-			});
-		expresswares(this.app)
-			.then(() => {
-				Logger.info(' ✅  Expresswares initialized'); // Expresswares loaded successfully
-			})
-			.catch((err: Error) => {
-				Logger.error('❌  Expresswares failed to initialize:', err); // Error in code with default express middlewares
-				process.exit(1); // Will crash app upon failure
-			});
-		_controllers(controllers, this.app)
-			.then(() => {
-				Logger.info(' ✅  Controllers initialized');
-			})
-			.catch((err: Error) => {
-				Logger.error('❌  Controllers failed to initialize:', err);
-				process.exit(1); // Will crash app upon failure
-			});
-		httpLogger(this.app)
-			.then(() => {
-				Logger.info(' ✅  HTTP Logger initialized');
-			})
-			.catch((err: Error) => {
-				Logger.error('❌  HTTP Logger failed to initialize:', err);
-				process.exit(1); // Will crash app upon failure
-			});
-		errorHandling(this.app)
-			.then(() => {
-				Logger.info(' ✅  Error Handling initialized');
-			})
-			.catch((err: Error) => {
-				Logger.error('❌  Error handling failed to initialize:', err);
-				process.exit(1); // Will crash app upon failure
+				Logger.error('⚠️   Connection with MongoDB could not be established:', err);
 			});
 	}
 
-	public async listen(): Promise<void> {
-		this.app.listen(this.port);
+	public listen(): void {
+		this.express.listen(this.port);
+		Logger.info(` 👂  App is running and listening on Port: ${this.port}`);
 	}
 }

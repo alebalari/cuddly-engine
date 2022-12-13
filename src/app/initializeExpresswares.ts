@@ -1,11 +1,12 @@
 import compression from 'compression';
 import cors from 'cors';
-import express, { Application } from 'express';
+import express, { Application, NextFunction, Request, Response } from 'express';
 import helmet from 'helmet';
+import morganMiddleware from '../utils/morgan.utils';
 
-export default async function expresswares(app: Application) {
+export default function expresswares(app: Application) {
 	// Applies to all express requests
-	app.use((req, res, next) => {
+	app.use((req: Request, res: Response, next: NextFunction) => {
 		// Helpful HTTP header
 		res.set('Strict-Transport-Security', `max-age=${60 * 60 * 24 * 365 * 100}`);
 		// Cleans up URLS -- /mywebpage/ -> /mywebpage
@@ -31,4 +32,6 @@ export default async function expresswares(app: Application) {
 	app.use(compression());
 	// Reduce server fingerprinting
 	app.disable('x-powered-by');
+	// Logs all HTTP requests to the console
+	app.use(morganMiddleware);
 }
