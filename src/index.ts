@@ -1,7 +1,7 @@
 import App from './app';
 import databaseConnection from './app/initializeDatabase';
 import configuration from './utils/configuration.utils';
-import Route from './utils/interfaces';
+import { Route } from './utils/interfaces';
 import Logger from './utils/logger.utils';
 
 // Grab listening port

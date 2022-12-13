@@ -1,6 +1,6 @@
 import mongoose, { Connection } from 'mongoose';
 import handleDbEvents from '../utils/handleDbEvents.utils';
-import { MongoOptions } from '../utils/interfaces/mongoOptions.interfaces';
+import { MongoOptions } from '../utils/interfaces';
 import Logger from '../utils/logger.utils';
 
 // Declare the Mongoose connection
