@@ -1,16 +1,16 @@
-import express, { Application, Router } from 'express';
+import express, { Application } from 'express';
 import Logger from '../utils/logger.utils';
 import expresswares from './initializeExpresswares';
 import errorHandling from './initializeErrorHandling';
-import { Route, MongoOptions } from '../utils/interfaces';
-
+import { MongoOptions } from '../utils/interfaces';
 import databaseConnection from './initializeDatabase';
+import { CommonRoutes } from '../common/common.routes.config';
 
 export default class App {
 	express: Application;
 	port: number;
 
-	constructor(routes: Route[], port: number, mongoUri: string, mongoOptions: MongoOptions) {
+	constructor(port: number, mongoUri: string, mongoOptions: MongoOptions, routes: CommonRoutes[]) {
 		this.express = express();
 		this.port = port;
 
@@ -25,11 +25,11 @@ export default class App {
 		Logger.info(' ✅  Express middleware initialized...');
 	}
 
-	private initializeRoutes(routes: Route[]): void {
-		routes.forEach((route: Route) => {
-			this.express.use('/api', Router());
+	private initializeRoutes(routes: CommonRoutes[]): void {
+		routes.forEach((route) => {
+			this.express.use('/api', route.configureRoutes());
+			Logger.info(`${route.routeName()} has initialized`);
 		});
-		Logger.info(' ✅  Routes initialized...');
 	}
 
 	private initializeErrorHandling(): void {

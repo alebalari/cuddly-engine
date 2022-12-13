@@ -1,10 +1,3 @@
-import { Router } from 'express';
-
-export interface Route {
-	path: string;
-	router: Router;
-}
-
 export interface MongoOptions {
 	autoIndex?: boolean; // By default mongoose will automatically build indexes defined in the schema
 	family?: number; // Use IPv4, skip trying IPv6, default action is IPv6 first then IPv4
