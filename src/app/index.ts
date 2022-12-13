@@ -2,8 +2,8 @@ import express, { Application, Router } from 'express';
 import Logger from '../utils/logger.utils';
 import expresswares from './initializeExpresswares';
 import errorHandling from './initializeErrorHandling';
-import Route from '../utils/interfaces/Route.interface';
-import { MongoOptions } from '../utils/interfaces/mongoOptions.interfaces';
+import { Route, MongoOptions } from '../utils/interfaces';
+
 import databaseConnection from './initializeDatabase';
 
 export default class App {

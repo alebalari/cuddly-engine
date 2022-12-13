@@ -1,8 +1,6 @@
 import winston from 'winston';
 
 // Define your severity levels.
-// With them, You can create log files,
-// see or hide levels based on the running ENV.
 const levels = {
 	error: 0,
 	warn: 1,
@@ -22,8 +20,6 @@ const level = () => {
 };
 
 // Define different colors for each level.
-// Colors make the log message more visible,
-// adding the ability to focus or ignore messages.
 const colors = {
 	error: 'red',
 	warn: 'yellow',
@@ -33,7 +29,6 @@ const colors = {
 };
 
 // Tell winston that you want to link the colors
-// defined above to the severity levels.
 winston.addColors(colors);
 
 // Chose the aspect of your log customizing the log format.
@@ -47,7 +42,6 @@ const format = winston.format.combine(
 );
 
 // Define which transports the logger must use to print out messages.
-// In this example, we are using three different transports
 const transports = [
 	// Allow the use the console to print the messages
 	new winston.transports.Console(),
@@ -62,7 +56,6 @@ const transports = [
 ];
 
 // Create the logger instance that has to be exported
-// and used to log messages.
 const Logger = winston.createLogger({
 	level: level(),
 	levels,
