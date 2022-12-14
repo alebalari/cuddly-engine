@@ -4,7 +4,7 @@ import express, { Application, NextFunction, Request, Response } from 'express';
 import helmet from 'helmet';
 import morganMiddleware from '../utils/morgan.utils';
 
-export default function expresswares(app: Application) {
+export default function initializeExpresswares(app: Application) {
 	// Applies to all express requests
 	app.use((req: Request, res: Response, next: NextFunction) => {
 		// Helpful HTTP header

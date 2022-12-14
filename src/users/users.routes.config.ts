@@ -3,7 +3,7 @@ import { CommonRoutes } from '../common/common.routes.config';
 
 export class UsersRoutes extends CommonRoutes {
 	constructor(app: Application) {
-		super(app, 'UsersRoutes');
+		super(app, 'Users');
 	}
 
 	configureRoutes(): Application {

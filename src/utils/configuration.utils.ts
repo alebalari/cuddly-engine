@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import Configuration from './interfaces';
+import Configuration from '../common/interfaces/configuration.interface';
 import Logger from './logger.utils';
 
 dotenv.config();

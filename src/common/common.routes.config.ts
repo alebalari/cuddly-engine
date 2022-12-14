@@ -2,16 +2,12 @@ import { Application } from 'express';
 
 export abstract class CommonRoutes {
 	app: Application;
-	name: string;
+	path: string;
 
-	constructor(app: Application, name: string) {
+	constructor(app: Application, path: string) {
 		this.app = app;
-		this.name = name;
+		this.path = path;
 		this.configureRoutes();
-	}
-
-	routeName() {
-		return this.name;
 	}
 
 	abstract configureRoutes(): Application;
