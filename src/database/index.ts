@@ -1,7 +1,6 @@
 import mongoose, { Connection } from 'mongoose';
 import DatabaseOptions from '../common/interfaces/databaseOptions.interface';
 import handleDbEvents from '../utils/handleDbEvents.utils';
-import Logger from '../utils/logger.utils';
 
 // Declare the Mongoose connection
 const mongooseConnection: Connection = mongoose.connection;
@@ -14,8 +13,8 @@ export default async function initializeDatabaseConnection(mongoDbUri: string, m
 	// Connects to MongoDB database using the Mongoose Library
 	await mongoose.connect(mongoDbUri, mongoDbOptions);
 }
-// Close the connection when the application is terminated
-async function closeMongooseConnection() {
+// Close the database connection when the application is terminated
+export async function closeMongooseConnection() {
 	return await new Promise<void>((resolve, reject) => {
 		mongooseConnection.close((err) => {
 			if (err != null) {
@@ -26,16 +25,3 @@ async function closeMongooseConnection() {
 		});
 	});
 }
-// We listen for 'SIGINT' event which is emitted upon app termination
-process.on('SIGINT', () => {
-	closeMongooseConnection()
-		.then(() => {
-			Logger.info(' 🛑  Mongoose process has exited through app termination'); // Successfull process termination
-			Logger.info(' 🛑  Application has been terminated');
-			process.exit(0);
-		})
-		.catch((err) => {
-			Logger.error(' ⚠️  Error closing the Mongoose connection process:', err); // Unsuccessfull process termination
-			process.exit(1);
-		});
-});

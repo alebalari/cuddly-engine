@@ -9,6 +9,12 @@ export class UsersRoutes extends CommonRoutes {
 	configureRoutes(): Application {
 		this.app
 			.route(`/users`)
+			.all((req: Request, res: Response, next: NextFunction) => {
+				// this middleware function runs before any request to /users/:userId
+				// but it doesn't accomplish anything just yet---
+				// it simply passes control to the next applicable function below using next()
+				next();
+			})
 			.get((req: Request, res: Response) => {
 				res.status(200).send(`List of users`);
 			})
