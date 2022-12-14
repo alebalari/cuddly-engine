@@ -27,7 +27,7 @@ export default class App {
 
 	private initializeRoutes(routes: CommonRoutes[]): void {
 		routes.forEach((route) => {
-			this.express.use('/api', route.configureRoutes());
+			this.express.use(route.configureRoutes());
 			Logger.info(`${route.routeName()} has initialized`);
 		});
 	}
