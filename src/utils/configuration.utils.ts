@@ -1,5 +1,5 @@
 import dotenv from 'dotenv';
-import { Configuration } from './interfaces';
+import Configuration from './interfaces';
 import Logger from './logger.utils';
 
 dotenv.config();
@@ -21,6 +21,8 @@ const configuration: Configuration = {
 		serverSelectionTimeoutMS: 5000,
 		maxPoolSize: 10,
 		minPoolSize: 5,
+		bufferCommands: false,
+		// strictQuery: true, // For some reason saying MongoDB does not support this option
 	},
 };
 

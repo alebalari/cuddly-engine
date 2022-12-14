@@ -1,6 +1,6 @@
 import { Connection, Error } from 'mongoose';
+import { MongooseEvent } from '../common/types/mongooseEvent.type';
 import Logger from './logger.utils';
-import { MongooseEvent } from './types';
 
 // The 'databaseEvent' function implements the MongooseEvent type
 const databaseEvent: MongooseEvent = (connection: Connection, event: string, callback: (err: Error) => void) => {

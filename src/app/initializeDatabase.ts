@@ -1,6 +1,6 @@
 import mongoose, { Connection } from 'mongoose';
+import DatabaseOptions from '../common/interfaces/databaseOptions.interface';
 import handleDbEvents from '../utils/handleDbEvents.utils';
-import { MongoOptions } from '../utils/interfaces';
 import Logger from '../utils/logger.utils';
 
 // Declare the Mongoose connection
@@ -8,7 +8,7 @@ const mongooseConnection: Connection = mongoose.connection;
 // Handling for events emitted by Mongoose connection
 handleDbEvents(mongooseConnection);
 
-export default async function databaseConnection(mongoDbUri: string, mongoDbOptions: MongoOptions) {
+export default async function databaseConnection(mongoDbUri: string, mongoDbOptions: DatabaseOptions) {
 	// Gets rid of deprecation warning from Mongoose about 'strictQuery' being switched back to default in Mongoose 7
 	mongoose.set('strictQuery', true);
 	// Connects to MongoDB database using the Mongoose Library

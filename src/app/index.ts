@@ -2,15 +2,15 @@ import express, { Application } from 'express';
 import Logger from '../utils/logger.utils';
 import expresswares from './initializeExpresswares';
 import errorHandling from './initializeErrorHandling';
-import { MongoOptions } from '../utils/interfaces';
 import databaseConnection from './initializeDatabase';
 import { CommonRoutes } from '../common/common.routes.config';
+import DatabaseOptions from '../common/interfaces/databaseOptions.interface';
 
 export default class App {
 	express: Application;
 	port: number;
 
-	constructor(port: number, mongoUri: string, mongoOptions: MongoOptions, routes: CommonRoutes[]) {
+	constructor(port: number, mongoUri: string, mongoOptions: DatabaseOptions, routes: CommonRoutes[]) {
 		this.express = express();
 		this.port = port;
 
@@ -37,7 +37,7 @@ export default class App {
 		Logger.info(' ✅  Error middleware initialized...');
 	}
 
-	private initializeDatabase(mongoUri: string, mongoOptions: MongoOptions): void {
+	private initializeDatabase(mongoUri: string, mongoOptions: DatabaseOptions): void {
 		Logger.info(' ✅  Database connection initialized...');
 		databaseConnection(mongoUri, mongoOptions)
 			.then(() => {
